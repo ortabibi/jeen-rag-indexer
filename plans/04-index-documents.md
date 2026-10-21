@@ -12,10 +12,10 @@ It prints a short progress line after each step. Every error class we have (`Ext
 **Files:** create `index_documents.py`
 
 **Tasks**
-- [ ] argparse: `--file` (required), `--strategy` (required, choices `fixed|sentence|paragraph`)
-- [ ] Pipeline: extract → chunk → embed → connect → set up table → insert
-- [ ] Progress output: characters extracted, number of chunks, rows saved
-- [ ] One `try/except` that turns our errors into friendly messages and exit code 1
+- [x] argparse: `--file` (required), `--strategy` (required, choices `fixed|sentence|paragraph`)
+- [x] Pipeline: extract → chunk → embed → connect → set up table → insert
+- [x] Progress output: characters extracted, number of chunks, rows saved
+- [x] One `try/except` that turns our errors into friendly messages and exit code 1
 
 **How to test**
 ```

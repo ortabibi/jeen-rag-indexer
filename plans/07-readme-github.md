@@ -30,5 +30,8 @@ Expected: `.env` and `venv/` are not listed as files to commit, and `git check-i
 
 **Questions for you**
 1. *Should the repository be public or private?* My recommendation is whatever the assignment's submission asks for. If it doesn't say, use private and add the reviewers as collaborators.
+   **Answer:** public
 2. *Should the repo be just `part2` or the whole `jeen-assignment` folder (with part1)?* My recommendation is the whole folder if part1 should be submitted too, so the reviewers get one link.
+   **Answer:** just part 2 
 3. *Should `check_setup.py` stay?* My recommendation is to keep it and mention it in the README as a quick connection test. It helps a reviewer check their `.env` before indexing.
+   **Answer:** yes keep it
