@@ -16,7 +16,7 @@ Then remove leftovers like `check_setup.py` (if you want), confirm `.env` is ign
 **Files:** create `README.md`; possibly delete `check_setup.py` and `note`
 
 **Tasks**
-- [ ] README: overview, install, env vars, usage, strategies, sample output, error handling, limitations
+- [ ] README: overview, install, env vars, usage, strategies, sample output, error handling, limitations, design decisions (from the list in `PLAN.md`)
 - [ ] Run index + search for each strategy and paste the real output into the README
 - [ ] `git init`, check that `git status` does **not** list `.env`
 - [ ] First commit, create the GitHub repo, push

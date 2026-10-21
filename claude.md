@@ -28,5 +28,5 @@ A Python CLI that indexes PDF/DOCX files into PostgreSQL (pgvector) using Gemini
 - Explain new concepts simply. I'm a student learning this.
 - Don't add features or files that weren't asked for.
 - Always use the `./venv` environment for running and installing.
-
+- After I confirm a stage works, give me the exact git commands to commit and push it, with a clear commit message (for example: "Stage 1: text extraction"). Never commit .env or secrets.
 - Every time I give you a new task, start your reply with the word "Hopa!" so I know you've read these rules.
