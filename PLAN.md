@@ -25,6 +25,10 @@ A running list of choices made along the way, to be copied into the README in St
 - **PDF layout mode (Stage 1):** pypdf's normal mode returns no blank lines between paragraphs, so layout mode is used to keep them for the paragraph strategy.
 - **Headers and footers (Stage 1):** lines that repeat in the first/last 3 lines of at least half the pages are removed (digits ignored, so "Page 1", "Page 2" match). A document title that matches the running header is removed too.
 - **Known limitation (Stage 1):** if a PDF heading sits very close to the next paragraph, it stays joined to that paragraph. Detecting headings by guesswork would break real wrapped lines.
+- **Chunk sizes (Stage 2):** measured in characters: 500 per chunk, 100 overlap for the fixed strategy. The sample documents are only ~4,000 characters, so smaller chunks give more precise search results. Sizes are constants at the top of `chunking.py`.
+- **Sentence grouping (Stage 2):** whole sentences are added until a chunk would pass ~500 characters. A sentence is never split, so a longer one becomes its own chunk.
+- **Sentence splitting (Stage 2):** a regex on `.`, `!`, `?` followed by whitespace, with no extra packages. Known limitation: abbreviations like "e.g." or "Dr." are treated as sentence ends.
+- **Paragraph chunks (Stage 2):** paragraphs under 100 characters (e.g. headings) are merged into the next one. Paragraphs over 500 are split by sentences.
 
 ## Requirements coverage
 
