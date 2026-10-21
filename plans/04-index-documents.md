@@ -29,4 +29,9 @@ Expected:
 
 **Questions for you**
 1. *Should `--strategy` be required or default to one?* My recommendation is required, exactly as the assignment's command shows. That way it is always clear which strategy produced the rows.
+
+   **Answer:** required
+
 2. *Should progress lines be plain `print` or the `logging` module?* My recommendation is plain `print`. It is a small CLI, and `logging` adds setup without a real benefit here.
+
+   **Answer:** print
