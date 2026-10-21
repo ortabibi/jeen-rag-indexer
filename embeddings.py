@@ -39,8 +39,10 @@ def embed_texts(texts: list[str], task_type: str = DOCUMENT_TASK) -> list[list[f
                 ),
             )
         except errors.APIError as error:
+            # Gemini's message usually ends with a period already.
+            message = (error.message or "unknown error").rstrip(".")
             raise EmbeddingError(
-                f"Gemini API error ({error.code}): {error.message}. "
+                f"Gemini API error ({error.code}): {message}. "
                 f"Check that GEMINI_API_KEY is valid."
             ) from error
         except Exception as error:

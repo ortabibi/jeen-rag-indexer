@@ -32,3 +32,4 @@ A Python CLI that indexes PDF/DOCX files into PostgreSQL (pgvector) using Gemini
 - Every time I give you a new task, start your reply with the word "Hopa!" so I know you've read these rules.
 - I write my answers directly in the stage's plan file (plans/XX-*.md), next to each question. Before starting a stage, and whenever I say "answered", re-read that file from disk and follow the answers written there. If an answer is unclear, ask me before writing code.
 - When giving me git commands, write the commit with a title and a short description (2–3 lines, simple English) of what was done and why, using: git commit -m "title" -m "description"
+- Don't add a Co-Authored-By line to commit messages.

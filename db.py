@@ -17,6 +17,10 @@ CREATE TABLE IF NOT EXISTS document_chunks (
     created_at TIMESTAMP DEFAULT now()
 )
 """
+# Give up after this many seconds, so a wrong POSTGRES_URL fails quickly
+# instead of hanging. It applies to each address the host name resolves to
+# (localhost has two), so the total wait can be a few times longer.
+CONNECT_TIMEOUT_SECONDS = 5
 
 
 class DatabaseError(Exception):
@@ -26,7 +30,9 @@ class DatabaseError(Exception):
 def connect() -> psycopg.Connection:
     """Open a connection to POSTGRES_URL with pgvector support enabled."""
     try:
-        conn = psycopg.connect(load_config().postgres_url)
+        conn = psycopg.connect(
+            load_config().postgres_url, connect_timeout=CONNECT_TIMEOUT_SECONDS
+        )
     except psycopg.Error as error:
         # The original error text can contain parts of the URL, so it is not shown.
         raise DatabaseError(
