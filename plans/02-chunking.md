@@ -4,7 +4,7 @@
 
 **What I'm going to do**
 An embedding stands for the meaning of one piece of text, and a whole document is too big and too mixed to be one piece. So we cut the text into chunks, and each chunk gets its own embedding. The three strategies differ in *where* they cut:
-- **fixed**: every 500 characters, with each chunk overlapping the previous one by 100 characters. The overlap means a sentence that falls on a cut still appears whole in one of the two chunks. It is simple and predictable, but it can cut mid-word or mid-idea.
+- **fixed**: every 500 characters, with each chunk overlapping the previous one by 100 characters. The overlap keeps context across the cut: a short sentence (under 100 characters) that falls on a cut appears whole in one of the two chunks, and longer ones are at least partly repeated, so the meaning isn't lost completely. It is simple and predictable, but it can cut mid-word or mid-idea.
 - **sentence**: split into sentences, then group a few sentences per chunk. It never cuts a sentence in half.
 - **paragraph**: split on blank lines, so each paragraph is a chunk. Very short paragraphs are merged with the next one. Very long ones are split by sentences so no chunk gets too big.
 
