@@ -1,0 +1,6 @@
+google-genai
+psycopg[binary]
+pgvector
+pypdf
+python-docx
+python-dotenv
