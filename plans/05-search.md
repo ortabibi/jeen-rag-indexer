@@ -13,11 +13,11 @@ If the table is empty or nothing passes the threshold (question 2), it prints a 
 **Files:** create `search.py`; small change to `embeddings.py` (question 1)
 
 **Tasks**
-- [ ] argparse: `--query` (required), `--top-k` (default 5)
-- [ ] Reject an empty or whitespace-only query
-- [ ] Embed query → search → print ranked results
-- [ ] Empty results message
-- [ ] Same friendly error handling as Stage 4
+- [x] argparse: `--query` (required), `--top-k` (default 5)
+- [x] Reject an empty or whitespace-only query
+- [x] Embed query → search → print ranked results
+- [x] Empty results message
+- [x] Same friendly error handling as Stage 4
 
 **How to test**
 ```
@@ -30,5 +30,13 @@ Expected:
 
 **Questions for you**
 1. *Should we use Gemini's task types?* `gemini-embedding-001` can embed documents as `RETRIEVAL_DOCUMENT` and questions as `RETRIEVAL_QUERY`, which improves search quality. My recommendation is yes. It is a one-line option in `embeddings.py`, recommended by Google for search. Chunks indexed before the change would need re-indexing.
+
+   **Answer:** go with your recommendion
+
 2. *Should there be a minimum similarity threshold?* Vector search always returns the closest rows, even when none are relevant. My recommendation is a low default threshold (e.g. 0.5) plus a note in the output. That makes "empty search results" a real, testable case, not only "the table is empty".
+
+   **Answer:** yes, but make it a CLI option --min-score. Before choosing the default, test a relevant query ("login issue") and an unrelated one ("chocolate cake recipe"), show me the scores, and pick a default between them. Also add --top-k with default 5.
+
 3. *Should search have filters such as `--strategy` or `--file`?* My recommendation is no. They weren't asked for, and the result lines already show both. That makes it easy to compare strategies by eye.
+
+   **Answer:** add an optional --strategy filter (fixed / sentence / paragraph). Without it, search all strategies.

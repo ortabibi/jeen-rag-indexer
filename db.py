@@ -95,16 +95,28 @@ def insert_chunks(
 
 
 def search_chunks(
-    conn: psycopg.Connection, query_embedding: list[float], top_k: int
+    conn: psycopg.Connection,
+    query_embedding: list[float],
+    top_k: int,
+    min_score: float = 0.0,
+    strategy: str | None = None,
 ) -> list[dict]:
-    """Return the top_k chunks closest to the query, most similar first."""
+    """Return up to top_k chunks scoring at least min_score, most similar first."""
     query_vector = Vector(query_embedding)
+    # <=> is cosine distance (0 = same meaning), so similarity = 1 - distance.
+    conditions = ["1 - (embedding <=> %s) >= %s"]
+    params = [query_vector, query_vector, min_score]
+    if strategy is not None:
+        conditions.append("split_strategy = %s")
+        params.append(strategy)
+    params.extend([query_vector, top_k])
+
     try:
-        # <=> is cosine distance (0 = same meaning), so similarity = 1 - distance.
         rows = conn.execute(
             "SELECT chunk_text, filename, split_strategy, 1 - (embedding <=> %s) "
-            "FROM document_chunks ORDER BY embedding <=> %s LIMIT %s",
-            (query_vector, query_vector, top_k),
+            f"FROM document_chunks WHERE {' AND '.join(conditions)} "
+            "ORDER BY embedding <=> %s LIMIT %s",
+            params,
         ).fetchall()
     except psycopg.Error as error:
         conn.rollback()
