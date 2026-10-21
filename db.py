@@ -1,6 +1,7 @@
 """Connect to PostgreSQL and set up the pgvector table."""
 
 import psycopg
+from pgvector import Vector
 from pgvector.psycopg import register_vector
 
 from config import load_config
@@ -58,3 +59,60 @@ def setup_database(conn: psycopg.Connection) -> None:
         raise DatabaseError(
             f"Could not create the document_chunks table: {error.diag.message_primary}"
         ) from error
+
+
+def insert_chunks(
+    conn: psycopg.Connection,
+    chunks: list[str],
+    embeddings: list[list[float]],
+    filename: str,
+    strategy: str,
+) -> None:
+    """Replace this file+strategy's rows with the new chunks, in one transaction."""
+    rows = [
+        (chunk, Vector(embedding), filename, strategy)
+        for chunk, embedding in zip(chunks, embeddings)
+    ]
+    try:
+        # Delete and insert are committed together, so if anything fails
+        # the old rows are kept and no half-indexed document is left behind.
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM document_chunks WHERE filename = %s AND split_strategy = %s",
+                (filename, strategy),
+            )
+            cur.executemany(
+                "INSERT INTO document_chunks (chunk_text, embedding, filename, split_strategy) "
+                "VALUES (%s, %s, %s, %s)",
+                rows,
+            )
+        conn.commit()
+    except psycopg.Error as error:
+        conn.rollback()
+        raise DatabaseError(
+            f"Could not save the chunks: {error.diag.message_primary}"
+        ) from error
+
+
+def search_chunks(
+    conn: psycopg.Connection, query_embedding: list[float], top_k: int
+) -> list[dict]:
+    """Return the top_k chunks closest to the query, most similar first."""
+    query_vector = Vector(query_embedding)
+    try:
+        # <=> is cosine distance (0 = same meaning), so similarity = 1 - distance.
+        rows = conn.execute(
+            "SELECT chunk_text, filename, split_strategy, 1 - (embedding <=> %s) "
+            "FROM document_chunks ORDER BY embedding <=> %s LIMIT %s",
+            (query_vector, query_vector, top_k),
+        ).fetchall()
+    except psycopg.Error as error:
+        conn.rollback()
+        raise DatabaseError(
+            f"Could not search the chunks: {error.diag.message_primary}"
+        ) from error
+
+    return [
+        {"chunk_text": text, "filename": name, "strategy": strategy, "similarity": similarity}
+        for text, name, strategy, similarity in rows
+    ]
